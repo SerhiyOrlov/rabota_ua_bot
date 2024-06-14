@@ -1,6 +1,6 @@
 # models.py
 from datetime import datetime
-from database import db
+from .database import db
 
 class QueryHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True)

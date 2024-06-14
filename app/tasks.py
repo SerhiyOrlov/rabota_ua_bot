@@ -1,11 +1,11 @@
 # tasks.py
-from celery_app import make_celery
+from .celery_app import make_celery
 from celery.schedules import crontab
-from app import app
-from models import db, QueryHistory
+from .run import app
+from .models import db, QueryHistory
 
 
-from api_service import get_vacancies_amount
+from .api_service import get_vacancies_amount
 
 celery_app = make_celery(app)
 
@@ -31,7 +31,7 @@ def get_and_save_data(keywords):
 
 celery_app.conf.beat_schedule = {
     'fetch-and-store-data-every-hour': {
-        'task': 'tasks.fetch_and_store_data',
+        'task': 'tasks.get_and_save_data',
         'schedule': crontab(minute=0, hour='*'),  # Каждые часы
     },
 }
