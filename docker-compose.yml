@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  flask-app:
+    build: .
+    container_name: flask-app
+    environment:
+      - FLASK_ENV=development
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    command: python -m flask run
+
+  celery-worker:
+    build: .
+    container_name: celery-worker
+    command: celery -A app..celery_app worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - flask-app
+      - redis
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A tasks.celery_app beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - flask-app
+      - redis
+
+  redis:
+    image: redis:6.0-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
