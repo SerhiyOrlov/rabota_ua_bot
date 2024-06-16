@@ -20,7 +20,7 @@ def heartbeat():
 
 @app.route('/get_today_statistic')
 def get_today_statistic():
-
+    pass
 
 
 if __name__ == '__main__':
