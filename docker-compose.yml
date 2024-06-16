@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "5001:5000"
+      - '5001:5000'
     depends_on:
       - redis
     command: python -m flask run
@@ -38,4 +38,4 @@ services:
     image: redis:6.0-alpine
     container_name: redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
