@@ -1,4 +1,3 @@
-# app/celery_app.py
 from celery import Celery
 
 

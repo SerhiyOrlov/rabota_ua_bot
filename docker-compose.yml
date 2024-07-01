@@ -7,19 +7,19 @@ services:
     environment:
       - FLASK_ENV=development
     volumes:
-      - .:/app
+      - ./app:/app
     ports:
       - '5001:5000'
     depends_on:
       - redis
-    command: python -m flask run
+    command: python -m flask run --host=0.0.0.0
 
   celery-worker:
     build: ./app
     container_name: celery-worker
-    command: celery -A app.tasks.celery_app worker --loglevel=info
+    command: celery -A tasks.celery_app worker --loglevel=info
     volumes:
-      - .:/app
+      - ./app:/app
     depends_on:
       - flask-app
       - redis
@@ -27,9 +27,9 @@ services:
   celery-beat:
     build: ./app
     container_name: celery-beat
-    command: celery -A app.tasks.celery_app beat --loglevel=info
+    command: celery -A tasks.celery_app beat --loglevel=info
     volumes:
-      - .:/app
+      - ./app:/app
     depends_on:
       - flask-app
       - redis
@@ -39,3 +39,14 @@ services:
     container_name: redis
     ports:
       - '6379:6379'
+
+  telegram-bot:
+    build: ./bot
+    container_name: telegram-bot
+    environment:
+      - TELEGRAM_API_TOKEN=7423810103:AAGKDv7rDV7s-fDXOQgRdp8Ts582oovE5bw
+    volumes:
+      - ./bot:/bot
+    depends_on:
+      - flask-app
+    command: python bot.py
